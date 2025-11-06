@@ -12,11 +12,11 @@ class GemHub:
 
     def update(self, direction):
         if direction[0]: # left
-            pos = (random.randint(0, 200), random.randint(200, 300))
-        elif direction[1]: # riht
-            pos = (random.randint(300, 500), random.randint(200, 300))
+            pos = (random.randint(0, 120), random.randint(150, 300))
+        elif direction[1]: # right
+            pos = (random.randint(380, 480), random.randint(150, 300))
         elif direction[2]: # up
-            pos = (random.randint(200, 300), random.randint(0, 200))
+            pos = (random.randint(200, 300), random.randint(0, 150))
         elif direction[3]:
             pos = (random.randint(200, 300), random.randint(300, 500))
 
@@ -25,12 +25,24 @@ class GemHub:
     
     def append_gem(self, pos):
         '''adds gem to a dictionary to keep track for drawing'''
-        self.gem_map.append({'type': self.current_gem_type, 'pos': pos})
-        print(self.gem_map)
+        self.gem_map.append({'type': self.current_gem_type, 'pos': pos, 's': [3, 3]})
 
     def change_gem(self):
         '''change to a random gem'''
         self.current_gem_type = self.gem_types[random.randint(0, len(self.gem_types) - 1)]
+    
+    def funmode(self):
+        '''dvd like bouncing'''
+        # bouncing off side logic
+        for gem in self.gem_map:
+            if gem['pos'][0] <= 0 or gem['pos'][0] + 50 <= self.game.screen_width:
+                gem['s'[0]] -= gem['s'[0]]
+            elif gem['pos'][1] <= 0 or gem['pos'][1] + 50 <= self.game.screen_width:
+                gem['s'[1]] -= gem['s'[1]]
+
+            gem['pos'] += gem['s'[0]]
+            gem['pos'] += gem['s'[1]]
+
 
     # displays gem in te middle and other gems(appended to a dictionary and then drawn like tilemaps)
     def render(self, surf): 

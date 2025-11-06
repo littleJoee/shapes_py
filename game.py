@@ -4,6 +4,7 @@ import math
 
 from util import load_image
 from gems import GemHub
+from guides import Guidelines
 
 import pygame
 
@@ -12,20 +13,28 @@ class Game:
     def __init__(self):
         pygame.init()
 
-        self.screen = pygame.display.set_mode((500, 500), 0, 32)
+        self.screen_width = 500
+        self.screen_height = 500
+        self.screen = pygame.display.set_mode((self.screen_width, self.screen_height), 0, 32)
         self.clock = pygame.time.Clock()
         self.square = pygame.image.load('assets/square.png')
         self.square.set_colorkey((255, 255, 255))
+        
 
         self.images = {
             'circle': load_image('circle'),
             'diamond': load_image('diamond'),
             'square': load_image('square'),
             'triangle': load_image('triangle'),
+            'circle_g': load_image('guides/circle'),
+            'diamond_g': load_image('guides/diamond'),
+            'square_g': load_image('guides/square'),
+            'triangle_g': load_image('guides/triangle'),
         }
         self.direction = [False, False, False, False]
 
         self.Gem = GemHub(self, self.images) # idk how t do gem type
+        self.guides = Guidelines(self.images)
 
     def run(self): # numbers go brrr use bool instead and switch change to false if keyup
         is_pressed = False
@@ -70,11 +79,13 @@ class Game:
 
             # update to given dir
             if is_pressed:
+                self.guides.update(self.direction)
                 self.Gem.update(self.direction)
             # print(is_pressed, self.direction)
             is_pressed = False
 
             self.Gem.render(self.screen)
+            self.guides.render(self.screen)
             pygame.display.update()
             self.clock.tick(60)
 
