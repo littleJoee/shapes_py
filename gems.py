@@ -7,11 +7,17 @@ class GemHub:
         self.pos = [200, 200]
 
         self.gem_types = ['circle', 'square', 'triangle', 'diamond']
+        self.correct_dir = {'circle': [False, True, False, False],
+                            'square': [False, False, False, True], 
+                            'triangle': [False, False, True, False], 
+                            'diamond': [True, False, False, False]}
+        
         self.current_gem_type = self.gem_types[1]
         self.gem_map = []
 
-    def update(self, direction):
+    def update(self, direction, timer):
         if direction[0]: # left
+            self.correct = False
             pos = (random.randint(0, 120), random.randint(150, 300))
         elif direction[1]: # right
             pos = (random.randint(380, 480), random.randint(150, 300))
@@ -42,6 +48,13 @@ class GemHub:
 
             gem['pos'] += gem['s'[0]]
             gem['pos'] += gem['s'[1]]
+        
+    def is_correct(self, direction):
+        if direction == self.correct_dir[self.current_gem_type]:
+                return True
+        else:
+            return False
+        
 
 
     # displays gem in te middle and other gems(appended to a dictionary and then drawn like tilemaps)

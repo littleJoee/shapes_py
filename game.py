@@ -5,6 +5,7 @@ import math
 from util import load_image
 from gems import GemHub
 from guides import Guidelines
+from timer import Timer
 
 import pygame
 
@@ -35,9 +36,12 @@ class Game:
 
         self.Gem = GemHub(self, self.images) # idk how t do gem type
         self.guides = Guidelines(self.images)
+        self.timer = Timer()
 
     def run(self): # numbers go brrr use bool instead and switch change to false if keyup
         is_pressed = False
+        correct = False
+
         while True:
             self.screen.fill((0, 0, 0))
 
@@ -77,13 +81,20 @@ class Game:
                         self.direction[3] = False
                     is_pressed = False
 
-            # update to given dir
+            # updates
+
             if is_pressed:
                 self.guides.update(self.direction)
-                self.Gem.update(self.direction)
-            # print(is_pressed, self.direction)
-            is_pressed = False
+                correct = self.Gem.is_correct(self.direction)
+                self.Gem.update(self.direction, self.timer)
 
+            self.timer.update(correct)
+            print(correct)
+            is_pressed = False
+            correct = False
+
+            # renders
+            self.timer.render(self.screen)
             self.Gem.render(self.screen)
             self.guides.render(self.screen)
             pygame.display.update()
