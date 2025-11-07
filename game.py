@@ -2,7 +2,7 @@ import sys
 import os
 import math
 
-from util import load_image
+from util import load_image, draw_text
 from gems import GemHub
 from guides import Guidelines
 from timer import Timer
@@ -20,6 +20,8 @@ class Game:
         self.clock = pygame.time.Clock()
         self.square = pygame.image.load('assets/square.png')
         self.square.set_colorkey((255, 255, 255))
+        self.score_font = pygame.font.SysFont('arial', 30)
+        self.font = pygame.font.SysFont('arial', 20)
         
 
         self.images = {
@@ -33,10 +35,40 @@ class Game:
             'triangle_g': load_image('guides/triangle'),
         }
         self.direction = [False, False, False, False]
+        self.score = 0
+        
+        self.current_state = 'play'
 
         self.Gem = GemHub(self, self.images) # idk how t do gem type
         self.guides = Guidelines(self.images)
         self.timer = Timer()
+
+    def game_over(self):
+        run = True
+        while run:
+            self.screen.fill((0, 0, 0))
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        self.current_state = 'play'
+                        run = False
+
+            draw_text(str(self.score), self.score_font, (255, 255, 255), self.screen, 250, 250)
+            draw_text('press space to play again', self.font, (255, 255, 255), self.screen, 200, 300)
+
+            pygame.display.update()
+            self.clock.tick(60)
+            
+
+    def state(self):
+        while True:
+            if self.current_state == 'play':
+                self.run()
+            else:
+                self.game_over()
 
     def run(self): # numbers go brrr use bool instead and switch change to false if keyup
         is_pressed = False
@@ -86,10 +118,14 @@ class Game:
             if is_pressed:
                 self.guides.update(self.direction)
                 correct = self.Gem.is_correct(self.direction)
-                self.Gem.update(self.direction, self.timer)
+                if correct:
+                    self.score += 1
+                self.Gem.update(self.direction)
 
             self.timer.update(correct)
-            print(correct)
+            if self.timer.timer <= 0:
+                self.current_state = 'game_over'
+                break
             is_pressed = False
             correct = False
 
@@ -100,4 +136,4 @@ class Game:
             pygame.display.update()
             self.clock.tick(60)
 
-Game().run()
+Game().state()

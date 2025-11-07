@@ -15,7 +15,7 @@ class GemHub:
         self.current_gem_type = self.gem_types[1]
         self.gem_map = []
 
-    def update(self, direction, timer):
+    def update(self, direction):
         if direction[0]: # left
             self.correct = False
             pos = (random.randint(0, 120), random.randint(150, 300))
