@@ -37,9 +37,9 @@ class Game:
         self.direction = [False, False, False, False]
         self.score = 0
         
-        self.current_state = 'play'
+        self.current_state = 'start'
 
-        self.Gem = GemHub(self, self.images) # idk how t do gem type
+        self.gem = GemHub(self, self.images) # idk how t do gem type
         self.guides = Guidelines(self.images)
         self.timer = Timer()
 
@@ -64,11 +64,7 @@ class Game:
             
 
     def state(self):
-        while True:
-            if self.current_state == 'play':
-                self.run()
-            else:
-                self.game_over()
+        pass
 
     def run(self): # numbers go brrr use bool instead and switch change to false if keyup
         is_pressed = False
@@ -113,27 +109,39 @@ class Game:
                         self.direction[3] = False
                     is_pressed = False
 
-            # updates
 
-            if is_pressed:
-                self.guides.update(self.direction)
-                correct = self.Gem.is_correct(self.direction)
-                if correct:
-                    self.score += 1
-                self.Gem.update(self.direction)
+            # start page
+            if self.current_state == 'start':
+                if is_pressed:
+                    self.current_state = 'run'
 
-            self.timer.update(correct)
-            if self.timer.timer <= 0:
-                self.current_state = 'game_over'
-                break
-            is_pressed = False
-            correct = False
+            # play updates
+            if self.current_state == 'run':
+                if is_pressed:
+                    self.guides.update(self.direction)
+                    correct = self.gem.is_correct(self.direction)
+                    if correct:
+                        self.score += 1
+                    self.gem.update(self.direction, self.current_state)
+
+                self.timer.update(correct)
+                if self.timer.timer <= 0:
+                    self.current_state = 'game_over'
+                is_pressed = False
+                correct = False
+
+            # game over updates
+            if self.current_state == 'game_over':
+                self.gem.funmode()
+                draw_text(str(self.score), self.score_font, (255, 255, 255), self.screen, 250, 250)
+                if is_pressed:
+                    self.current_state = 'play'
 
             # renders
             self.timer.render(self.screen)
-            self.Gem.render(self.screen)
+            self.gem.render(self.screen)
             self.guides.render(self.screen)
             pygame.display.update()
             self.clock.tick(60)
 
-Game().state()
+Game().run()
