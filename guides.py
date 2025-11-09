@@ -24,7 +24,10 @@ class Guidelines:
                 self.dir[i] = direction[i] 
 
         self.disable = all(self.dir)
-        print(self.dir) 
+
+    def reset(self):
+        self.disable = False
+        self.dir = [False, False, False, False]
     
     def render(self, surf):
         if not self.disable:

@@ -58,11 +58,15 @@ class GemHub:
                 return True
         else:
             return False
+
+    def reset(self):
+        self.gem_map = []
         
 
 
     # displays gem in te middle and other gems(appended to a dictionary and then drawn like tilemaps)
-    def render(self, surf):
+    def render(self, surf, state):
         for gem in self.gem_map:
             surf.blit(self.assets[gem['type']], gem['pos'])
-        surf.blit(self.assets[self.current_gem_type], self.pos)
+        if state != "game_over":
+            surf.blit(self.assets[self.current_gem_type], self.pos)

@@ -133,13 +133,19 @@ class Game:
             # game over updates
             if self.current_state == 'game_over':
                 self.gem.funmode()
-                draw_text(str(self.score), self.score_font, (255, 255, 255), self.screen, 250, 250)
                 if is_pressed:
-                    self.current_state = 'play'
+                    self.guides.reset()
+                    self.gem.reset()
+                    self.timer.reset()
+                    self.current_state = 'start'
+                    is_pressed = False
+                    self.score = 0
+
+                draw_text(str(self.score), self.score_font, (255, 255, 255), self.screen, 250, 250)
 
             # renders
             self.timer.render(self.screen)
-            self.gem.render(self.screen)
+            self.gem.render(self.screen, self.current_state)
             self.guides.render(self.screen)
             pygame.display.update()
             self.clock.tick(60)
