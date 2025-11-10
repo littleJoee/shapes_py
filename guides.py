@@ -6,9 +6,9 @@ class Guidelines:
         self.dir = [False, False, False, False]
 
         self.pos = [
-            (60, 230), # red diamon on left 
+            (18, 230), # red diamon on left 
             (430, 230), # yellow circle on right
-            (230, 100), # blue square down
+            (230, 18), # blue square down
             (230, 420)  # green triangle up
         ]
         self.guides = {

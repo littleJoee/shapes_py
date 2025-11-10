@@ -2,7 +2,7 @@ import sys
 import os
 import math
 
-from util import load_image, draw_text
+from util import load_image, draw_text, mouse_pos
 from gems import GemHub
 from guides import Guidelines
 from timer import Timer
@@ -18,21 +18,19 @@ class Game:
         self.screen_height = 500
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height), 0, 32)
         self.clock = pygame.time.Clock()
-        self.square = pygame.image.load('assets/square.png')
-        self.square.set_colorkey((255, 255, 255))
-        self.score_font = pygame.font.SysFont('arial', 30)
-        self.font = pygame.font.SysFont('arial', 20)
+        self.score_font = pygame.font.Font('assets/monogram.ttf', 50)
         
 
         self.images = {
-            'circle': load_image('circle'),
-            'diamond': load_image('diamond'),
-            'square': load_image('square'),
-            'triangle': load_image('triangle'),
+            'circle': load_image('gems/circle'),
+            'diamond': load_image('gems/diamond'),
+            'square': load_image('gems/square'),
+            'triangle': load_image('gems/triangle'),
             'circle_g': load_image('guides/circle'),
             'diamond_g': load_image('guides/diamond'),
             'square_g': load_image('guides/square'),
             'triangle_g': load_image('guides/triangle'),
+            'title': load_image('title_img', False)
         }
         self.direction = [False, False, False, False]
         self.score = 0
@@ -63,8 +61,8 @@ class Game:
             self.clock.tick(60)
             
 
-    def state(self):
-        pass
+    def title(self):
+        self.screen.blit(self.images['title'], (122, 96))
 
     def run(self): # numbers go brrr use bool instead and switch change to false if keyup
         is_pressed = False
@@ -108,10 +106,13 @@ class Game:
                     if event.key == pygame.K_DOWN:
                         self.direction[3] = False
                     is_pressed = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos()
 
 
             # start page
             if self.current_state == 'start':
+                self.title()
                 if is_pressed:
                     self.current_state = 'run'
 
@@ -122,6 +123,8 @@ class Game:
                     correct = self.gem.is_correct(self.direction)
                     if correct:
                         self.score += 1
+                    elif not correct and is_pressed:
+                        self.timer.timer -= 5
                     self.gem.update(self.direction, self.current_state)
 
                 self.timer.update(correct)

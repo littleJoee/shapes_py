@@ -4,7 +4,7 @@ class GemHub:
     def __init__(self, game, assets):
         self.game = game
         self.assets = assets
-        self.pos = [200, 200]
+        self.pos = [230, 230]
 
         self.gem_types = ['circle', 'square', 'triangle', 'diamond']
         self.correct_dir = {'circle': [False, True, False, False],
@@ -35,7 +35,7 @@ class GemHub:
     
     def append_gem(self, pos):
         '''adds gem to a dictionary to keep track for drawing'''
-        self.gem_map.append({'type': self.current_gem_type, 'pos': [pos[0], pos[1]], 's': [3, 3]})
+        self.gem_map.append({'type': self.current_gem_type, 'pos': [pos[0], pos[1]], 's': [random.randint(-3, 3), random.randint(-3, 3)]})
 
     def change_gem(self):
         '''change to a random gem'''

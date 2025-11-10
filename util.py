@@ -2,9 +2,10 @@ import pygame
 
 IMG_PATH = 'assets/'
 
-def load_image(name):
+def load_image(name, colorkey=True):
     img = pygame.image.load(IMG_PATH + name + '.png')
-    img.set_colorkey((255, 255, 255))
+    if colorkey:
+        img.set_colorkey((255, 255, 255))
     return img
     
 def draw_text(text, font, color, surface, x, y):
@@ -12,3 +13,7 @@ def draw_text(text, font, color, surface, x, y):
     textrect = textobj.get_rect()
     textrect.topleft = (x, y)
     surface.blit(textobj, textrect)
+
+def mouse_pos():
+    pos = pygame.mouse.get_pos()
+    print(pos)
